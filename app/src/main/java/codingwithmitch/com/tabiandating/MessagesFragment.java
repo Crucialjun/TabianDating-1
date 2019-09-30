@@ -3,9 +3,11 @@ package codingwithmitch.com.tabiandating;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +21,7 @@ import android.view.ViewTreeObserver;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import codingwithmitch.com.tabiandating.models.User;
@@ -42,6 +45,8 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
     static int mAppHeight;
     static int currentOrientation = -1;
 
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -59,10 +64,12 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
         return view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void initSearchView(){
         // Associate searchable configuration with the SearchView
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchManager searchManager = (SearchManager) Objects.requireNonNull(getActivity()).getSystemService(Context.SEARCH_SERVICE);
 
+        assert searchManager != null;
         mSearchView.setSearchableInfo(searchManager
                 .getSearchableInfo(getActivity().getComponentName()));
         mSearchView.setMaxWidth(Integer.MAX_VALUE);
@@ -126,11 +133,7 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
         Log.d(TAG, "onDestroy: called.");
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mIMainActivity = (IMainActivity) getActivity();
-    }
+
 
     public void setKeyboardVisibilityListener() {
 
@@ -192,4 +195,9 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mIMainActivity = (IMainActivity) getActivity();
+    }
 }

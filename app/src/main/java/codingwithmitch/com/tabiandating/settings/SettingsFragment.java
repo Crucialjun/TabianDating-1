@@ -9,13 +9,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.telephony.PhoneNumberUtils;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -42,10 +40,8 @@ import codingwithmitch.com.tabiandating.util.Resources;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class SettingsFragment extends Fragment implements
-        View.OnClickListener,
-        AdapterView.OnItemSelectedListener,
-        TextView.OnEditorActionListener{
+public class SettingsFragment extends Fragment
+        implements View.OnClickListener, AdapterView.OnItemSelectedListener, TextView.OnEditorActionListener {
 
     private static final String TAG = "SettingsFragment";
 
@@ -95,6 +91,7 @@ public class SettingsFragment extends Fragment implements
     private Boolean mPermissionsChecked = false;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -115,35 +112,14 @@ public class SettingsFragment extends Fragment implements
         mSave.setOnClickListener(this);
         mBackArrow.setOnClickListener(this);
 
-        mName.setOnEditorActionListener(this);
-
-
         checkPermissions();
         setBackgroundImage(view);
         initToolbar();
         getSavedPreferences();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mPhoneNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher(Locale.getDefault().getCountry()));
-        }
-        else{
-            mPhoneNumber.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        mPhoneNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher(Locale.getDefault().getCountry()));
+        mName.setOnEditorActionListener(this);
 
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    editable.replace(0, editable.length(), PhoneNumberUtils.formatNumber(editable.toString()));
-                }
-            });
-        }
 
         return view;
     }

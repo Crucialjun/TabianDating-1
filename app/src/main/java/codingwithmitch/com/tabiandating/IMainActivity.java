@@ -18,4 +18,6 @@ public interface IMainActivity {
     void setBottomNavigationVisibility(boolean visibility);
 
     void hideKeyboard();
+
+
 }

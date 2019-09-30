@@ -28,8 +28,8 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
 
     //vars
     private ArrayList<User> mUsers = new ArrayList<>();
-    private ArrayList<Message> mMessages = new ArrayList<>();
     private ArrayList<Message> mFilteredMessages = new ArrayList<>();
+    private ArrayList<Message> mMessages = new ArrayList<>();
     private Context mContext;
     private IMainActivity mInterface;
 
@@ -37,17 +37,16 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
     public MessagesRecyclerViewAdapter(Context context, ArrayList<User> users) {
         mContext = context;
         mUsers = users;
-
         setMessages();
+
     }
 
     private void setMessages(){
-        for(int i = 0; i < mUsers.size(); i++){
-            mMessages.add(new Message(mUsers.get(i), Messages.MESSAGES[i]));
+        for(int i = 0;i<mUsers.size();i++){
+            mMessages.add(new Message(mUsers.get(i),Messages.MESSAGES[i]));
         }
         mFilteredMessages = mMessages;
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -61,7 +60,7 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
         Log.d(TAG, "onBindViewHolder: called.");
 
         final User user = mFilteredMessages.get(position).getUser();
-        final String message = mFilteredMessages.get(position).getMessage();
+        final String messages  = mFilteredMessages.get(position).getMessage();
 
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.ic_launcher_background);
@@ -72,7 +71,7 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
                 .into(holder.image);
 
         holder.name.setText(user.getName());
-        holder.message.setText(message);
+        holder.message.setText(messages); //generate a random message
 
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,12 +94,13 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
                     mFilteredMessages = mMessages;
                 } else {
                     ArrayList<Message> filteredList = new ArrayList<>();
+                    for(int i = 0;i<mMessages.size();i++){
+                        if(mMessages.get(i).getMessage().toLowerCase().contains(charString.toLowerCase())){
+                            filteredList.add(mMessages.get(i));
 
-                    for (int i = 0; i < mMessages.size(); i++) {
-                        if (mMessages.get(i).getMessage().toLowerCase().contains(charString.toLowerCase())) {
+                        }else if(mUsers.get(i).getName().toLowerCase().contains(charString.toLowerCase())){
                             filteredList.add(mMessages.get(i));
-                        } else if (mUsers.get(i).getName().toLowerCase().contains(charString.toLowerCase())) {
-                            filteredList.add(mMessages.get(i));
+
                         }
                     }
                     mFilteredMessages = filteredList;

@@ -11,6 +11,8 @@
 
 
         <RelativeLayout
+            android:background="?android:attr/selectableItemBackground"
+            android:focusable="true"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:id="@+id/back_arrow">
@@ -72,7 +74,9 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_camera"
                     android:id="@+id/profile_image"
+                    android:focusable="true"
                     android:layout_centerInParent="true"
+                    android:background="?android:attr/selectableItemBackground"
                     />
 
 
@@ -110,6 +114,7 @@
                         android:textSize="20sp"
                         android:hint="@string/name_hint"
                         android:layout_marginStart="5dp"
+                        android:imeOptions="actionDone"
                         android:inputType="textCapWords"/>
 
                 </LinearLayout>

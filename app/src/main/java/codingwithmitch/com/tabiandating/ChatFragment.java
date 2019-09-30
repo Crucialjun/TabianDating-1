@@ -2,9 +2,11 @@ package codingwithmitch.com.tabiandating;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import codingwithmitch.com.tabiandating.models.Message;
 import codingwithmitch.com.tabiandating.models.User;
@@ -38,7 +41,6 @@ public class ChatFragment extends Fragment implements View.OnClickListener{
     private TextView mFragmentHeading;
     private CircleImageView mProfileImage;
     private RelativeLayout mBackArrow;
-//    private EditText mNewMessage;
     private AutoCompleteTextView mNewMessage;
     private TextView mSendMessage;
     private RelativeLayout mRelativeLayoutTop;
@@ -63,6 +65,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener{
         getSavedPreferences();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -88,12 +91,13 @@ public class ChatFragment extends Fragment implements View.OnClickListener{
         return view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void setupAutoCompleteTextView(){
         String[] messages = getResources().getStringArray(R.array.message_suggestions_array);
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, messages);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()),android.R.layout.simple_list_item_1,messages);
         mNewMessage.setAdapter(adapter);
     }
+
 
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
