@@ -1,6 +1,8 @@
 package codingwithmitch.com.tabiandating;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -231,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Bo
             super.onBackPressed();
         }
 
+        hideKeyboard();
     }
 
     private void setNavigationIcon(String tagname) {
@@ -282,7 +285,6 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Bo
             }
         }
         setNavigationIcon(tagname);
-
         printBackStack();
     }
 
@@ -390,6 +392,30 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Bo
         setFragmentVisibilities(getString(R.string.tag_fragment_chat));
     }
 
+    @Override
+    public void setBottomNavigationVisibility(boolean visibility) {
+        if(visibility)
+            showBottomNavigation();
+        else
+            hideBottomNavigation();
+    }
+
+    @Override
+    public void hideKeyboard() {
+        if(getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            try{
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
+        }
+    }
+// FOR MORE INFORMATION: https://stackoverflow.com/questions/1109022/close-hide-the-android-soft-keyboard
+//    public static void hideKeyboard(Context context, View view) {
+//        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+//        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+//    }
 
     private void printBackStack() {
         Log.d(TAG, "printBackStack: ----------------------------------- ");
