@@ -5,16 +5,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.telephony.PhoneNumberUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +33,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Locale;
+
 import codingwithmitch.com.tabiandating.IMainActivity;
 import codingwithmitch.com.tabiandating.R;
 import codingwithmitch.com.tabiandating.util.PreferenceKeys;
@@ -33,7 +42,10 @@ import codingwithmitch.com.tabiandating.util.Resources;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class SettingsFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class SettingsFragment extends Fragment implements
+        View.OnClickListener,
+        AdapterView.OnItemSelectedListener,
+        TextView.OnEditorActionListener{
 
     private static final String TAG = "SettingsFragment";
 
@@ -103,11 +115,35 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         mSave.setOnClickListener(this);
         mBackArrow.setOnClickListener(this);
 
+        mName.setOnEditorActionListener(this);
+
+
         checkPermissions();
         setBackgroundImage(view);
         initToolbar();
         getSavedPreferences();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mPhoneNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher(Locale.getDefault().getCountry()));
+        }
+        else{
+            mPhoneNumber.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    editable.replace(0, editable.length(), PhoneNumberUtils.formatNumber(editable.toString()));
+                }
+            });
+        }
 
         return view;
     }
@@ -307,6 +343,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy: called.");
+    }
+
+    @Override
+    public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+        if(i == EditorInfo.IME_ACTION_DONE){
+            savePreferences();
+        }
+        return false;
     }
 }
 
