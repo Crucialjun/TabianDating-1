@@ -14,6 +14,8 @@
         <RelativeLayout
             android:layout_width="50dp"
             android:layout_height="match_parent"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
             android:id="@+id/back_arrow">
 
             <ImageView
@@ -30,6 +32,8 @@
             android:layout_height="match_parent"
             android:layout_toRightOf="@+id/back_arrow"
             android:gravity="center_vertical"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
             android:id="@+id/relLayoutTop">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -101,6 +105,7 @@
             android:textSize="15sp"
             android:id="@+id/post_message"
             android:gravity="center"
+            android:focusable="true"
             android:background="@drawable/blue_onclick_grey"/>
 
 <!--        <EditText-->

@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,8 +33,10 @@ import codingwithmitch.com.tabiandating.models.User;
 import codingwithmitch.com.tabiandating.settings.SettingsFragment;
 import codingwithmitch.com.tabiandating.util.PreferenceKeys;
 
-public class MainActivity extends AppCompatActivity implements IMainActivity, BottomNavigationViewEx.OnNavigationItemSelectedListener,
-        NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements IMainActivity
+        , BottomNavigationViewEx.OnNavigationItemSelectedListener
+        , NavigationView.OnNavigationItemSelectedListener, KeyEvent.Callback
+{
 
     private static final String TAG = "MainActivity";
 
@@ -418,7 +421,52 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Bo
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(isChildFragmentVisible()){
+            if(keyCode == KeyEvent.KEYCODE_TAB){
+                moveFocusInFragment();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
+    private void moveFocusInFragment() {
+        if(mViewProfileFragment != null){
+            if(mViewProfileFragment.isVisible()){
+                mViewProfileFragment.moveFocusForward();
+            }
+        }
+        if(mChatFragment != null){
+            if(mChatFragment.isVisible()){
+                mChatFragment.moveFocusForward();
+            }
+        }
+        if(mSettingsFragment != null){
+            if(mSettingsFragment.isVisible()){
+                mSettingsFragment.moveFocusForward();
+            };
+        }
+    }
+
+    private boolean isChildFragmentVisible(){
+        if(mViewProfileFragment != null){
+            if(mViewProfileFragment.isVisible()){
+                return true;
+            }
+        }
+        if(mChatFragment != null){
+            if(mChatFragment.isVisible()){
+                return true;
+            }
+        }
+        if(mSettingsFragment != null){
+            return mSettingsFragment.isVisible();
+        }
+
+        return false;
+    }
 }
 
 

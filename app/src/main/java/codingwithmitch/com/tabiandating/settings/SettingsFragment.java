@@ -41,7 +41,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class SettingsFragment extends Fragment
-        implements View.OnClickListener, AdapterView.OnItemSelectedListener, TextView.OnEditorActionListener {
+        implements View.OnClickListener
+        , AdapterView.OnItemSelectedListener
+        , TextView.OnEditorActionListener
+        ,View.OnFocusChangeListener{
 
     private static final String TAG = "SettingsFragment";
 
@@ -170,6 +173,10 @@ public class SettingsFragment extends Fragment
         mGenderSpinner.setOnItemSelectedListener(this);
         mInterestedInSpinner.setOnItemSelectedListener(this);
         mStatusSpinner.setOnItemSelectedListener(this);
+
+        mGenderSpinner.setOnFocusChangeListener(this);
+        mInterestedInSpinner.setOnFocusChangeListener(this);
+        mStatusSpinner.setOnFocusChangeListener(this);
     }
 
     @Override
@@ -327,6 +334,62 @@ public class SettingsFragment extends Fragment
             savePreferences();
         }
         return false;
+    }
+
+    public void moveFocusForward(){
+        try{
+            if(getActivity().getCurrentFocus().getId() == R.id.back_arrow){
+                Log.d(TAG, "moveFocusForward: setting focus to profile image");
+                mProfileImage.requestFocus();
+            }
+            else if(getActivity().getCurrentFocus().getId() == R.id.profile_image){
+                Log.d(TAG, "moveFocusForward: setting focus to name field");
+                mName.requestFocus();
+            }
+            else if(getActivity().getCurrentFocus().getId() == R.id.name){
+                Log.d(TAG, "moveFocusForward: setting focus to email field");
+                mEmail.requestFocus();
+            }
+            else if(getActivity().getCurrentFocus().getId() == R.id.email){
+                Log.d(TAG, "moveFocusForward: setting focus to phone field");
+                mPhoneNumber.requestFocus();
+            }
+            else if(getActivity().getCurrentFocus().getId() == R.id.phone_number){
+                Log.d(TAG, "moveFocusForward: setting focus to gender field");
+                mGenderSpinner.requestFocus();
+            }
+            else if(getActivity().getCurrentFocus().getId() == R.id.gender_spinner){
+                Log.d(TAG, "moveFocusForward: setting focus to interested in field");
+                mInterestedInSpinner.requestFocus();
+            }
+            else if(getActivity().getCurrentFocus().getId() == R.id.interested_in_spinner){
+                Log.d(TAG, "moveFocusForward: setting focus to status field");
+                mStatusSpinner.requestFocus();
+            }
+            else if(getActivity().getCurrentFocus().getId() == R.id.relationship_status_spinner){
+                Log.d(TAG, "moveFocusForward: setting focus to save button");
+                mSave.requestFocus();
+            }
+            else if(getActivity().getCurrentFocus().getId() == R.id.btn_save){
+                Log.d(TAG, "moveFocusForward: setting focus to back arrow");
+                mBackArrow.getParent().requestChildFocus(mBackArrow, mBackArrow);
+                mBackArrow.requestFocus();
+            }
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onFocusChange(View view, boolean b) {
+        switch (view.getId()){
+            case R.id.gender_spinner:
+            case R.id.relationship_status_spinner:
+            case R.id.interested_in_spinner:
+                mInterface.hideKeyboard();
+                break;
+        }
     }
 }
 
